@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse, path
-from .models import Choice, Question
+from .models import Category, Task
 from django.views import generic
 from django.conf.urls import url
 from rest_framework_swagger.views import get_swagger_view
@@ -33,47 +33,23 @@ class TwitterConnect(SocialConnectView):
     serializer_class = TwitterConnectSerializer
     adapter_class = TwitterOAuthAdapter
 
-#POLL VIEWS
+#TASKS VIEWS
 
 def home(request):
-    return render(request, 'polls/main.html')
+    return render(request, 'todo_list/main.html')
 
 class IndexView(generic.ListView):
-    template_name = 'polls/index.html'
-    context_object_name = 'latest_question_list'
+    template_name = 'todo_list/index.html'
+    context_object_name = 'todo_list'
 
     def get_queryset(self):
-        """Return the last five published questions."""
-        return Question.objects.order_by('-pub_date')[:5]
+        """Return all tasks."""
+        return Task.objects.order_by('deadline')
 
 
 class DetailView(generic.DetailView):
-    model = Question
-    template_name = 'polls/detail.html'
-
-
-class ResultsView(generic.DetailView):
-    model = Question
-    template_name = 'polls/results.html'
-
-
-def vote(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
-    try:
-        selected_choice = question.choice_set.get(pk=request.POST['choice'])
-    except (KeyError, Choice.DoesNotExist):
-        # Redisplay the question voting form.
-        return render(request, 'polls/detail.html', {
-            'question': question,
-            'error_message': "You didn't select a choice.",
-        })
-    else:
-        selected_choice.votes += 1
-        selected_choice.save()
-        # Always return an HttpResponseRedirect after successfully dealing
-        # with POST data. This prevents data from being posted twice if a
-        # user hits the Back button.
-        return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
+    model = Task
+    template_name = 'todo_list/detail.html'
 
 
 schema_view = get_swagger_view(title='Test Swagger')
