@@ -1,9 +1,14 @@
-from .views import TodoAPIView
+from .views import TaskViewSet, CategoryViewSet, UserViewSet, UserTasksViewSet
 from django.conf.urls import url
-from django.urls import path
+from django.urls import include, path
+from rest_framework import routers
 
+
+router = routers.DefaultRouter()
+router.register('state', CategoryViewSet)
+router.register('tasks', TaskViewSet)
+router.register('users', UserViewSet)
 
 urlpatterns = [
-    path('', TodoAPIView.as_view()),
-    path('<int:pk>', TodoAPIView.as_view()),
+    path('', include(router.urls)),
 ]

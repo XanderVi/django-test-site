@@ -22,7 +22,7 @@ class Task(models.Model):
                                on_delete=models.CASCADE,
                                related_name='author')
     worker = models.ForeignKey(User, on_delete=models.CASCADE,
-                               related_name='assigned_to')
+                               related_name='worker')
 
     def __str__(self):
         return self.title
