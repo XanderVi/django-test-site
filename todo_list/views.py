@@ -8,8 +8,6 @@ from rest_framework_swagger.views import get_swagger_view
 
 
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
-from rest_auth.registration.views import SocialLoginView
-
 from allauth.socialaccount.providers.twitter.views import TwitterOAuthAdapter
 from rest_auth.registration.views import SocialLoginView
 from rest_auth.social_serializers import TwitterLoginSerializer
@@ -17,26 +15,32 @@ from rest_auth.social_serializers import TwitterLoginSerializer
 from rest_auth.registration.views import SocialConnectView
 from rest_auth.social_serializers import TwitterConnectSerializer
 
-#SOCIAL AUTH & CONNECTION
+# SOCIAL AUTH & CONNECTION
+
 
 class FacebookLogin(SocialLoginView):
     adapter_class = FacebookOAuth2Adapter
+
 
 class TwitterLogin(SocialLoginView):
     serializer_class = TwitterLoginSerializer
     adapter_class = TwitterOAuthAdapter
 
+
 class FacebookConnect(SocialConnectView):
     adapter_class = FacebookOAuth2Adapter
+
 
 class TwitterConnect(SocialConnectView):
     serializer_class = TwitterConnectSerializer
     adapter_class = TwitterOAuthAdapter
 
-#TASKS VIEWS
+# TASKS VIEWS
+
 
 def home(request):
     return render(request, 'todo_list/main.html')
+
 
 class IndexView(generic.ListView):
     template_name = 'todo_list/index.html'
