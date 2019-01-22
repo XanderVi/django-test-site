@@ -3,21 +3,30 @@ from todo_list.models import Category, Task
 from django.contrib.auth.models import User
 
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class ShortTaskSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = User
-        fields = ('url', 'id', 'author', 'worker', 'first_name')
-        #depth = 0
+        model = Task
+        fields = ('url', 'title', 'category')
 
 
-class TaskSerializer(serializers.HyperlinkedModelSerializer):
+class FullTaskSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Task
         fields = '__all__'
 
 
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    author = ShortTaskSerializer(many=True)
+    worker = ShortTaskSerializer(many=True)
+
+    class Meta:
+        model = User
+        fields = ('url', 'id', 'author', 'worker', 'first_name', 'last_name', 'email')
+        depth = 1
+
+
 class CategorySerializer(serializers.HyperlinkedModelSerializer):
-    tasks = TaskSerializer(source='all_tasks', many=True)
+    tasks = ShortTaskSerializer(source='all_tasks', many=True)
 
     class Meta:
         model = Category
@@ -25,7 +34,7 @@ class CategorySerializer(serializers.HyperlinkedModelSerializer):
 
 
 class UserTasksSerializer(serializers.HyperlinkedModelSerializer):
-    tasks = TaskSerializer(source='all_tasks', many=True)
+    tasks = ShortTaskSerializer(source='all_tasks', many=True)
 
     class Meta:
         model = User
