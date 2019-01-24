@@ -1,4 +1,4 @@
-from .views import TaskViewSet, CategoryViewSet, UserViewSet, UserTasksViewSet
+from .views import TaskViewSet, CategoryViewSet, UserViewSet
 from django.urls import include, path
 from rest_framework import routers
 
