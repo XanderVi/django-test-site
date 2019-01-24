@@ -13,6 +13,7 @@ from django_currentuser.middleware import get_current_authenticated_user
 
 
 def secs_to_time(s):
+    check = s
     days = s // 86400
     s -= days * 86400
     hours = s // 3600
@@ -20,10 +21,16 @@ def secs_to_time(s):
     minutes = s // 60
     s -= minutes * 60
     seconds = s // 1
-    return str(days) + ' days, ' + \
-           str(hours) + ' hours, ' + \
-           str(minutes) + ' minutes, ' + \
-           str(seconds) + ' seconds'
+    if check > 0:
+        return str(days) + ' days, ' + \
+               str(hours) + ' hours, ' + \
+               str(minutes) + ' minutes, ' + \
+               str(seconds) + ' seconds'
+    return 'Deadline has come ' + \
+               str(days) + ' days, ' + \
+               str(hours) + ' hours, ' + \
+               str(minutes) + ' minutes, ' + \
+               str(seconds) + ' seconds ago'
 
 
 class UserPermissionsSet(permissions.BasePermission):
