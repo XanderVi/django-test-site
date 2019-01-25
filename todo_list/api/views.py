@@ -10,6 +10,7 @@ from rest_framework import permissions, status, viewsets
 
 from django.db.models import Q, Prefetch
 from django.contrib.auth.models import User
+from rest_framework.pagination import PageNumberPagination
 from django_currentuser.middleware import get_current_authenticated_user
 
 
@@ -34,10 +35,23 @@ def secs_to_time(s):
                str(seconds) + ' seconds ago'
 
 
+class UserPaginationClass(PageNumberPagination):
+    page_size = 2
+
+
+class TaskPaginationClass(PageNumberPagination):
+    page_size = 3
+
+
+class CategoryPaginationClass(PageNumberPagination):
+    page_size = 1
+
+
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (permissions.IsAuthenticated, UserPermissionsSet, )
+    pagination_class = UserPaginationClass
 
     @action(methods=['get'], detail=True)
     def hello(self, request, pk):
@@ -55,6 +69,7 @@ class TaskViewSet(viewsets.ModelViewSet):
     queryset = Task.objects.all()
     serializer_class = FullTaskSerializer
     permission_classes = (permissions.IsAuthenticated, TaskPermissionsSet, )
+    pagination_class = TaskPaginationClass
 
     def get_serializer_class(self):
         user_roots = get_current_authenticated_user().is_superuser    # or user.is_stuff
@@ -86,6 +101,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all().order_by('name')
     serializer_class = CategorySerializer
     permission_classes = (permissions.IsAuthenticated, CategoryPermissionsSet, )
+    pagination_class = CategoryPaginationClass
 
     def get_queryset(self):
         user = get_current_authenticated_user()
